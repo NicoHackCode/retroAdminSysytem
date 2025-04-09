@@ -5,14 +5,14 @@ const mockUsers: User[] = [
   {
     id:"890826",
     name: "Nicolás",
-    email: "nico.hackcode@gmail.com",
+    email: "example@gmail.com",
     password: "123456",
     role: "admin",
   },
   {
     id: "58387",
     name: "Grecia",
-    email: "grecia.user@example.com",
+    email: "grecia@example.com",
     password: "654321",
     role: "vendedor",
   },

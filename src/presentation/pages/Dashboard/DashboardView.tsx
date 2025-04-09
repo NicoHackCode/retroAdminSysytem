@@ -47,8 +47,7 @@ export const DashboardView = () => {
       <div className="dashboard-window">
         <h2>Bienvenido, {user.name}</h2>
         <p>Rol: {user.role}</p>
-  
-        {/* Gestión de usuarios solo para admin */}
+          
         {user.role === "admin" && (
           <>
             <h3>Gestión de usuarios</h3>
@@ -124,7 +123,6 @@ export const DashboardView = () => {
           </>
         )}
   
-        {/* Gestión de productos para admin y vendedor */}
         {["admin", "vendedor"].includes(user.role) && (
           <>
             <h3>Gestión de productos</h3>
@@ -132,7 +130,6 @@ export const DashboardView = () => {
           </>
         )}
   
-        {/* Visualización simple (si quisieras mostrar algo a otros roles) */}
         {!["admin", "vendedor"].includes(user.role) && (
           <>
             <h3>Inventario</h3>
