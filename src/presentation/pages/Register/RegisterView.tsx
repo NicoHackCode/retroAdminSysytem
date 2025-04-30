@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { User } from "../../../domain/models/User";
-import { UserService } from "../../../infrastructure/services/userService";
+import { AuthService } from "../../../infrastructure/services/authService";
 import { v4 as uuidv4 } from "uuid";
 import "./Register.css";
 
@@ -13,18 +13,25 @@ export const RegisterView = () => {
     password: "",
     role: "vendedor",
   });
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
 
     const newUser: User = {
       id: uuidv4(),
       ...formData,
     };
 
-    UserService.create(newUser);
-    alert("Usuario registrado con éxito");
-    navigate("/login");
+    const success = await AuthService.register(newUser);
+    
+    if (success) {
+      alert("Usuario registrado con éxito");
+      navigate("/login");
+    } else {
+      setError("El correo electrónico ya está registrado");
+    }
   };
 
   return (
@@ -81,6 +88,8 @@ export const RegisterView = () => {
             <option value="admin">Administrador</option>
           </select>
         </div> */}
+
+        {error && <p className="error-message">{error}</p>}
 
         <button type="submit" className="button-submit">
           Registrarse

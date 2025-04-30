@@ -10,6 +10,7 @@ export const ProductCrud = () => {
     description: "",
     price: 0,
   });
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
   useEffect(() => {
     setProducts(ProductService.getAll());
@@ -19,6 +20,29 @@ export const ProductCrud = () => {
     const product: Product = { id: uuidv4(), ...newProduct };
     ProductService.create(product);
     setProducts(ProductService.getAll());
+    setNewProduct({ name: "", description: "", price: 0 });
+  };
+
+  const handleEdit = (product: Product) => {
+    setEditingProduct(product);
+    setNewProduct({
+      name: product.name,
+      description: product.description,
+      price: product.price,
+    });
+  };
+
+  const handleUpdate = () => {
+    if (!editingProduct) return;
+
+    const updatedProduct: Product = {
+      ...editingProduct,
+      ...newProduct,
+    };
+
+    ProductService.update(updatedProduct);
+    setProducts(ProductService.getAll());
+    setEditingProduct(null);
     setNewProduct({ name: "", description: "", price: 0 });
   };
 
@@ -51,7 +75,22 @@ export const ProductCrud = () => {
           setNewProduct({ ...newProduct, price: parseFloat(e.target.value) })
         }
       />
-      <button onClick={handleAdd}>Agregar producto</button>
+      {editingProduct ? (
+        <>
+          <button onClick={handleUpdate}>Actualizar producto</button>
+          <button 
+            onClick={() => {
+              setEditingProduct(null);
+              setNewProduct({ name: "", description: "", price: 0 });
+            }}
+            className="btn-cancel"
+          >
+            Cancelar
+          </button>
+        </>
+      ) : (
+        <button onClick={handleAdd}>Agregar producto</button>
+      )}
 
       <table style={{ width: "100%", marginTop: "1rem" }}>
         <thead>
@@ -69,7 +108,7 @@ export const ProductCrud = () => {
               <td>{p.description}</td>
               <td>${p.price}</td>
               <td>
-                <button className="btn-edit">Editar</button>
+                <button className="btn-edit" onClick={() => handleEdit(p)}>Editar</button>
                 <button className="btn-delete" onClick={() => handleDelete(p.id)}>
                   Eliminar
                 </button>
